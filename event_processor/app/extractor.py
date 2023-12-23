@@ -21,4 +21,5 @@ class EventExtractor:
         self._kafka.subscription()
 
         for message in self._kafka:
+            print(f"Received message: {message.value}")
             yield message.value

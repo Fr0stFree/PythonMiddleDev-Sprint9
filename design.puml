@@ -1,0 +1,53 @@
+@startuml
+component Frontend
+actor Client
+actor Admin
+actor Analytic
+database Postgres #blue
+collections Events
+database Redis #red
+database Elastic #lightgreen
+database Clickhouse #orange
+control ETL
+
+component ContentService {
+    component ContentApp
+
+    ContentApp <-down-> Redis: cached responses
+    ContentApp <-down-> Elastic: search for films, actors etc...
+}
+
+component AuthService {
+    component AuthApp
+
+    AuthApp <-> Postgres: users, roles, login history...
+}
+
+component AdminService {
+    component AdminApp
+
+    AdminApp <-down-> Postgres: movies, actors, genres...
+    AdminApp -> AuthService: admin authentication
+}
+
+component UGCService {
+    component EventCollector
+    queue Kafka
+    component EventProcessor
+
+    Events -> EventCollector
+    EventCollector -> Kafka
+    Kafka -> EventProcessor
+    EventProcessor -> Clickhouse
+}
+
+Frontend --up-> Events
+Frontend -> AuthService: User authentication
+Frontend -down-> ContentService: Search films, actors etc...
+Admin -up-> AdminService: CRUD operations
+Client -> Frontend: Film consuming
+Analytic <-down-> Clickhouse: Data analytics
+Elastic <-down- ETL: Load movies
+Postgres -down-> ETL: Extract movies
+
+@enduml

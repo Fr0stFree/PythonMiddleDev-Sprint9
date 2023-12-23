@@ -1,12 +1,11 @@
 from aiohttp import web
 
-from handlers import CreateEventHandler
-from producer import EventProducer
 from settings import Settings
+from handlers import CreateEventHandler
+from recorder import EventRecorder
 
 
 async def startup(app: web.Application) -> None:
-    producer.add_message_broker(None)
     await producer.start()
 
 
@@ -17,7 +16,7 @@ async def shutdown(app: web.Application) -> None:
 if __name__ == '__main__':
     settings = Settings()
     app = web.Application()
-    producer = EventProducer()
+    producer = EventRecorder(broker_url=settings.kafka_url, topic=settings.kafka_topic)
 
     app.add_routes([web.post('/event', CreateEventHandler(callback=producer.on_event))])
     app.on_startup.append(startup)

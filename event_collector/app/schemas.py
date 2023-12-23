@@ -8,6 +8,8 @@ class EventType(Enum):
     MOVIE_REVIEWED = 'review'
     MOVIE_BOOKMARKED = 'favorite'
     MOVIE_WATCHED = 'watch'
+    MOUSE_CLICKED = 'click'
+    PAGE_VIEWED = 'view'
 
 
 class UserEvent(BaseModel):

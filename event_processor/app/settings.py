@@ -4,10 +4,9 @@ from pydantic import Field
 
 
 class Settings(BaseSettings):
-    app_port: int = Field(8000, env='EVENT_COLLECTOR_PORT')
-    app_host: str = Field('localhost', env='EVENT_COLLECTOR_HOST')
     kafka_url: str = Field(..., env='KAFKA_URL')
     kafka_topic: str = Field(..., env='KAFKA_TOPIC')
+    clickhouse_url: str = Field(..., env='CLICKHOUSE_URL')
 
     class Config:
         env_file = find_dotenv('.env')

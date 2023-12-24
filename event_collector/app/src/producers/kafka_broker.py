@@ -2,7 +2,7 @@ import json
 
 from kafka import KafkaProducer
 
-from brokers.base import AbstractBroker
+from .base import AbstractBroker
 
 
 class KafkaBroker(AbstractBroker):
@@ -13,8 +13,9 @@ class KafkaBroker(AbstractBroker):
             key_serializer=lambda x: str(x).encode('utf-8')
         )
         self._kafka_topic = topic
+        print(f"Connected to kafka. Ready to send messages to topic '{self._kafka_topic}'")
 
-    def send(self, messages: list[str]) -> None:
+    def send(self, messages: list[dict]) -> None:
         self._kafka.send(self._kafka_topic, value=messages)
 
     def is_connected(self) -> bool:

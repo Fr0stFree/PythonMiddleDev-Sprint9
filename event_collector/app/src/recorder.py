@@ -1,9 +1,7 @@
 import asyncio
 
-from schemas import UserEvent
-from asyncio.queues import Queue
-
-from brokers.base import AbstractBroker
+from src.producers import AbstractBroker
+from src.schemas import UserEvent
 
 
 class EventRecorder:
@@ -47,4 +45,5 @@ class EventRecorder:
 
     def _flush_events(self) -> None:
         self._broker.send(messages=[event.model_dump(mode='json') for event in self._batch])
+        print(f"Successfully sent {len(self._batch)} events to broker")
         self._batch.clear()

@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 
 class AbstractBroker(ABC):
     @abstractmethod
-    def send(self, messages: list[str]) -> None:
+    def send(self, messages: list[dict]) -> None:
         pass
 
     @abstractmethod

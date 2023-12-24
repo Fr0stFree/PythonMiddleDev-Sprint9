@@ -1,14 +1,26 @@
+from typing import Literal
+
 from settings import Settings
-from extractor import EventExtractor
-from transformer import EventTransformer
-from loader import EventLoader
+from src.extractor import EventExtractor
+from src.transformer import EventTransformer
+from src.loader import EventLoader
+from src.consumers import KafkaBroker, RabbitBroker
+
+
+def get_broker(broker: Literal['kafka', 'rabbitmq']) -> KafkaBroker | RabbitBroker:
+    if broker == 'kafka':
+        return KafkaBroker(broker_url=settings.kafka_url, topic=settings.kafka_topic)
+    elif broker == 'rabbitmq':
+        return RabbitBroker(host=settings.rabbitmq_host, port=settings.rabbitmq_port,
+                            user=settings.rabbitmq_username, password=settings.rabbitmq_password,
+                            exchange_name=settings.rabbitmq_exchange, queue_name=settings.rabbitmq_exchange)
 
 
 if __name__ == '__main__':
     settings = Settings()
-    extractor = EventExtractor(settings.kafka_url, settings.kafka_topic)
+    extractor = EventExtractor(message_broker=get_broker(settings.selected_broker))
     transformer = EventTransformer()
-    loader = EventLoader(settings.clickhouse_url)
+    loader = EventLoader()
 
     for events in extractor.start():
         transformed_events = transformer.transform(events)

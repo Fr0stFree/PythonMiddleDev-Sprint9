@@ -4,7 +4,7 @@ from typing import Callable
 
 from aiohttp.web import Request, Response
 
-from schemas import UserEvent
+from src.schemas import UserEvent
 
 
 class CreateEventHandler:

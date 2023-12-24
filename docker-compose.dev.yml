@@ -1,8 +1,9 @@
 version: "3.9"
 
 services:
-  ui:
+  kafka-ui:
     image: provectuslabs/kafka-ui:v0.7.0
+    container_name: kafka-ui
     ports:
       - "8080:8080"
     environment:
@@ -11,6 +12,7 @@ services:
 
   kafka:
     image: 'bitnami/kafka:latest'
+    container_name: kafka
     ports:
       - '9094:9094'
     environment:
@@ -21,3 +23,14 @@ services:
       - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
       - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka:9093
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+
+  rabbitmq:
+    image: 'rabbitmq:3.11.18'
+    container_name: rabbitmq
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=admin
+      - RABBITMQ_DEFAULT_VHOST=/

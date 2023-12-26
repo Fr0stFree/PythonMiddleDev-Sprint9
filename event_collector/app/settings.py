@@ -13,7 +13,7 @@ class Settings(BaseSettings):
     kafka_topic: str = Field(..., env='KAFKA_TOPIC')
     rabbitmq_host: str = Field(..., env='RABBITMQ_HOST')
     rabbitmq_port: int = Field(..., env='RABBITMQ_PORT')
-    rabbitmq_username: str = Field(..., env='RABBITMQ_USERNAME')
+    rabbitmq_user: str = Field(..., env='RABBITMQ_USER')
     rabbitmq_password: str = Field(..., env='RABBITMQ_PASSWORD')
     rabbitmq_exchange: str = Field(..., env='RABBITMQ_EXCHANGE')
     rabbitmq_queue_name: str = Field(..., env='RABBITMQ_QUEUE_NAME')

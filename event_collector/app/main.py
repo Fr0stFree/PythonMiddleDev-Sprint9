@@ -21,8 +21,8 @@ def get_broker(broker: Literal['kafka', 'rabbitmq']) -> KafkaBroker | RabbitBrok
         return KafkaBroker(broker_url=settings.kafka_url, topic=settings.kafka_topic)
     elif broker == 'rabbitmq':
         return RabbitBroker(host=settings.rabbitmq_host, port=settings.rabbitmq_port,
-                            user=settings.rabbitmq_username, password=settings.rabbitmq_password,
-                            exchange_name=settings.rabbitmq_exchange, queue_name=settings.rabbitmq_exchange)
+                            user=settings.rabbitmq_user, password=settings.rabbitmq_password,
+                            exchange_name=settings.rabbitmq_exchange, queue_name=settings.rabbitmq_queue_name)
 
 
 if __name__ == '__main__':

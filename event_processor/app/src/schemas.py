@@ -15,5 +15,5 @@ class EventType(Enum):
 class UserEvent(BaseModel):
     user_id: int
     event_type: EventType
-    timestamp: int
+    event_time: str
     movie_id: int

@@ -1,0 +1,20 @@
+Run commands in containers
+Use clickhouse-client
+
+# Node 1
+CREATE DATABASE shard;
+CREATE TABLE shard.events (id Int64, event_type String, event_time DateTime, movie_id Int64) Engine=ReplicatedMergeTree('/clickhouse/tables/shard1/events', 'replica_1') PARTITION BY toYYYYMMDD(event_time) ORDER BY id;
+CREATE TABLE default.events (id Int64, event_type String, event_time DateTime, movie_id Int64) ENGINE = Distributed('company_cluster', '', events, rand());
+
+# Node 2
+CREATE DATABASE replica;
+CREATE TABLE replica.events (id Int64, event_type String, event_time DateTime, movie_id Int64) Engine=ReplicatedMergeTree('/clickhouse/tables/shard1/events', 'replica_2') PARTITION BY toYYYYMMDD(event_time) ORDER BY id;
+
+# Node 3
+CREATE DATABASE shard;
+CREATE TABLE shard.events (id Int64, event_type String, event_time DateTime, movie_id Int64) Engine=ReplicatedMergeTree('/clickhouse/tables/shard2/events', 'replica_1') PARTITION BY toYYYYMMDD(event_time) ORDER BY id;
+CREATE TABLE default.events (id Int64, event_type String, event_time DateTime, movie_id Int64) ENGINE = Distributed('company_cluster', '', events, rand());
+
+# Node 4
+CREATE DATABASE replica;
+CREATE TABLE replica.events (id Int64, event_type String, event_time DateTime, movie_id Int64) Engine=ReplicatedMergeTree('/clickhouse/tables/shard2/events', 'replica_2') PARTITION BY toYYYYMMDD(event_time) ORDER BY id;

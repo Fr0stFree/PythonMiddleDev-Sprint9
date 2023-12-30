@@ -27,9 +27,10 @@ async def main():
     loader = EventLoader()
 
     for events in extractor.start():
-        print(f"Received event: {events}")
+        print(f'Received event: {events}')
         transformed_event = transformer.transform(events)
         await loader.load(transformed_event)
+        print('Inserted.')
 
 
 if __name__ == '__main__':

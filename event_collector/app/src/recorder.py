@@ -1,8 +1,8 @@
 import asyncio
 
 from src.producers import AbstractBroker
-from src.schemas import UserEvent
-
+from src.schemas import EventSchema
+from protocol.events_pb2 import EventStream
 
 class EventRecorder:
     FLUSH_DELAY = 3
@@ -13,7 +13,7 @@ class EventRecorder:
         self._queue = asyncio.Queue()
         self._batch = []
 
-    async def on_event(self, event: UserEvent) -> None:
+    async def on_event(self, event: bytes) -> None:
         await self._queue.put(event)
 
     async def start(self) -> None:
@@ -33,7 +33,7 @@ class EventRecorder:
             await self._process_event(event)
             self._queue.task_done()
 
-    async def _process_event(self, event: UserEvent) -> None:
+    async def _process_event(self, event: EventSchema) -> None:
         if len(self._batch) == 0:
             self._flash_task = asyncio.get_running_loop().call_later(self.FLUSH_DELAY, self._flush_events)
 
@@ -44,6 +44,7 @@ class EventRecorder:
             self._flush_events()
 
     def _flush_events(self) -> None:
-        self._broker.send(messages=[event.model_dump(mode='json') for event in self._batch])
-        print(f"Successfully sent {len(self._batch)} events to broker")
+        stream = EventStream(events=[event.to_proto() for event in self._batch])
+        self._broker.send(stream.SerializeToString())
+        print(f"Successfully sent {len(self._batch)}(s) events to broker")
         self._batch.clear()

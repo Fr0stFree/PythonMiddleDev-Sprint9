@@ -8,15 +8,21 @@ from pydantic_settings import BaseSettings
 class Settings(BaseSettings):
     app_port: int = Field(8000, env='EVENT_COLLECTOR_PORT')
     app_host: str = Field('localhost', env='EVENT_COLLECTOR_HOST')
-    selected_broker: Literal['kafka', 'rabbitmq'] = Field(..., env='SELECTED_BROKER')
+    selected_broker: Literal['kafka', 'rabbitmq', 'redis'] = Field(..., env='SELECTED_BROKER')
+
     kafka_url: str = Field(..., env='KAFKA_URL')
     kafka_topic: str = Field(..., env='KAFKA_TOPIC')
+
     rabbitmq_host: str = Field(..., env='RABBITMQ_HOST')
     rabbitmq_port: int = Field(..., env='RABBITMQ_PORT')
-    rabbitmq_username: str = Field(..., env='RABBITMQ_USERNAME')
+    rabbitmq_user: str = Field(..., env='RABBITMQ_USER')
     rabbitmq_password: str = Field(..., env='RABBITMQ_PASSWORD')
     rabbitmq_exchange: str = Field(..., env='RABBITMQ_EXCHANGE')
     rabbitmq_queue_name: str = Field(..., env='RABBITMQ_QUEUE_NAME')
+
+    redis_host: str = Field(..., env='REDIS_HOST')
+    redis_port: int = Field(..., env='REDIS_PORT')
+    redis_channel: str = Field(..., env='REDIS_CHANNEL')
 
     class Config:
         env_file = find_dotenv('.env')

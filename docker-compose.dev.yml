@@ -6,6 +6,9 @@ services:
     container_name: kafka-ui
     ports:
       - "8080:8080"
+    restart: unless-stopped
+    depends_on:
+      - kafka
     environment:
       - KAFKA_CLUSTERS_0_BOOTSTRAP_SERVERS=kafka:9092
       - KAFKA_CLUSTERS_0_NAME=kafka
@@ -15,6 +18,7 @@ services:
     container_name: kafka
     ports:
       - '9094:9094'
+    restart: unless-stopped
     environment:
       - KAFKA_CFG_NODE_ID=0
       - KAFKA_CFG_PROCESS_ROLES=controller,broker
@@ -30,6 +34,7 @@ services:
     ports:
       - '5672:5672'
       - '15672:15672'
+    restart: unless-stopped
     environment:
       - RABBITMQ_DEFAULT_USER=admin
       - RABBITMQ_DEFAULT_PASS=admin
@@ -87,3 +92,11 @@ services:
       - ./clickhouse/node4:/etc/clickhouse-server
     depends_on:
       - zookeeper
+
+  redis:
+    image: 'redis:6.2.5'
+    container_name: redis
+    ports:
+      - '6379:6379'
+    restart: unless-stopped
+

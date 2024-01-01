@@ -4,6 +4,7 @@ from src.producers import AbstractBroker
 from src.schemas import EventSchema
 from protocol.events_pb2 import EventStream
 
+
 class EventRecorder:
     FLUSH_DELAY = 3
     MAX_BATCH_SIZE = 5

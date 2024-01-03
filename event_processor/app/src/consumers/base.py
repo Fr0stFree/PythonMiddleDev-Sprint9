@@ -6,4 +6,3 @@ class AbstractBroker(ABC):
     @abstractmethod
     def receive(self) -> Generator[Union[str, bytes], None, None]:
         pass
-

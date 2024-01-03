@@ -1,9 +1,8 @@
-import json
-from typing import Generator, Any
+from typing import Generator
 
-from protocol.events_pb2 import EventStream
 from google.protobuf.json_format import MessageToDict
 
+from protocol.events_pb2 import EventStream
 from .consumers import AbstractBroker
 
 

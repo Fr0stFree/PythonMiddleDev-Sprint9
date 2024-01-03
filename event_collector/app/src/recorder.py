@@ -1,8 +1,8 @@
 import asyncio
 
+from protocol.events_pb2 import EventStream
 from src.producers import AbstractBroker
 from src.schemas import EventSchema
-from protocol.events_pb2 import EventStream
 
 
 class EventRecorder:

@@ -1,4 +1,4 @@
-from typing import Generator, Any, Union
+from typing import Generator, Union
 
 import redis
 

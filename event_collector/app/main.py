@@ -2,10 +2,10 @@ from typing import Literal
 
 from aiohttp import web
 
-from src.producers import KafkaBroker, RabbitBroker, RedisBroker, AbstractBroker
-from src.handlers import CreateEventHandler
-from src.recorder import EventRecorder
 from settings import Settings
+from src.handlers import CreateEventHandler
+from src.producers import KafkaBroker, RabbitBroker, RedisBroker, AbstractBroker
+from src.recorder import EventRecorder
 
 
 async def startup(app: web.Application) -> None:
@@ -36,4 +36,3 @@ if __name__ == '__main__':
     app.on_startup.append(startup)
     app.on_shutdown.append(shutdown)
     web.run_app(app, port=settings.app_port, host=settings.app_host)
-

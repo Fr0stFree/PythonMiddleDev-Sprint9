@@ -1,10 +1,10 @@
 from typing import Literal
 
 from settings import Settings
-from src.extractor import EventExtractor
-from src.transformer import EventTransformer
-from src.loader import EventLoader
 from src.consumers import KafkaBroker, RabbitBroker, RedisBroker, AbstractBroker
+from src.extractor import EventExtractor
+from src.loader import EventLoader
+from src.transformer import EventTransformer
 
 
 def get_broker(broker: Literal['kafka', 'rabbitmq', 'redis']) -> AbstractBroker:
@@ -27,4 +27,3 @@ if __name__ == '__main__':
     for events in extractor.start():
         transformed_events = transformer.transform(events)
         loader.load(transformed_events)
-

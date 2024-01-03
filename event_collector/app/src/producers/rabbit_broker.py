@@ -1,7 +1,5 @@
-from pika.exchange_type import ExchangeType
 from pika import BlockingConnection, URLParameters
-
-import json
+from pika.exchange_type import ExchangeType
 
 from .base import AbstractBroker
 
@@ -15,13 +13,14 @@ class RabbitBroker(AbstractBroker):
         self._channel.exchange_declare(exchange=exchange_name, exchange_type=ExchangeType.direct, durable=True)
         self._channel.queue_declare(queue=queue_name, durable=True)
         self._channel.queue_bind(exchange=exchange_name, queue=queue_name)
-        print(f"Connected to rabbit. Ready to send messages to queue '{self._queue_name}' through exchange '{self._exchange_name}'")
+        print(
+            f"Connected to rabbit. Ready to send messages to queue '{self._queue_name}' through exchange '{self._exchange_name}'")
 
-    def send(self, messages: list[dict]) -> None:
+    def send(self, message: str) -> None:
         self._channel.basic_publish(
             exchange=self._exchange_name,
             routing_key=self._queue_name,
-            body=json.dumps(messages).encode('utf-8'),
+            body=message,
         )
 
     def is_connected(self) -> bool:

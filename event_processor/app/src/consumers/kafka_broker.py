@@ -1,5 +1,5 @@
 import json
-from typing import Generator
+from typing import Generator, Union
 
 from kafka import KafkaConsumer
 
@@ -17,7 +17,7 @@ class KafkaBroker(AbstractBroker):
             value_deserializer=lambda x: json.loads(x.decode('utf-8'))
         )
 
-    def receive(self) -> Generator[list[dict], None, None]:
+    def receive(self) -> Generator[Union[str, bytes], None, None]:
         print(f"Connected to kafka. Topics available: {self._kafka.topics()}")
         self._kafka.subscribe(topics=[self._kafka_topic])
         print(f"Subscribed to topic: {self._kafka_topic}")

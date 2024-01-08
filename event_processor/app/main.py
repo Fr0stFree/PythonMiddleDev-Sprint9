@@ -2,10 +2,10 @@ import asyncio
 from typing import Literal
 
 from settings import Settings
-from src.extractor import EventExtractor
-from src.transformer import EventTransformer
-from src.loader import EventLoader
 from src.consumers import KafkaBroker, RabbitBroker, RedisBroker, AbstractBroker
+from src.extractor import EventExtractor
+from src.loader import EventLoader
+from src.transformer import EventTransformer
 
 settings = Settings()
 

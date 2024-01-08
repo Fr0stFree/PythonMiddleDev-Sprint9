@@ -1,4 +1,4 @@
-from typing import Generator, Any
+from typing import Generator, Union
 
 import redis
 
@@ -11,12 +11,10 @@ class RedisBroker(AbstractBroker):
         self._connection = redis.Redis(host=host, port=port)
         print(f"Connected to redis. Ready to receive messages from channel '{self._channel_name}'")
 
-    def receive(self) -> Generator[Any, None, None]:
+    def receive(self) -> Generator[Union[str, bytes], None, None]:
         pubsub = self._connection.pubsub()
         pubsub.subscribe(self._channel_name)
 
         for message in pubsub.listen():
             if message['type'] == 'message':
-                message = message['data'].decode('utf-8')
-                print(f"Received message: {message}")
-                yield message
+                yield message['data']

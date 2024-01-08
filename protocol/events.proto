@@ -1,0 +1,76 @@
+syntax = "proto3";
+
+package events;
+
+message BaseEventInfo {
+  string user_id = 1;
+  int32 happened_at = 2;
+}
+
+message Click {
+  BaseEventInfo info = 1;
+  string element_id = 2;
+  ElementType element_type = 3;
+
+  enum ElementType {
+    BUTTON = 0;
+    LINK = 1;
+    IMAGE = 2;
+    VIDEO = 3;
+    INPUT = 4;
+    OTHER = 5;
+  }
+}
+
+message PageViewed {
+  BaseEventInfo info = 1;
+  float duration = 2;
+  PageType page_type = 3;
+
+  enum PageType {
+    HOME = 0;
+    ACCOUNT = 1;
+    MOVIE = 2;
+    CATEGORIES = 3;
+    ACTOR = 4;
+    ADVERTISEMENT = 5;
+    OTHER = 6;
+  }
+}
+
+message MovieQualityChanged {
+  BaseEventInfo info = 1;
+  string movie_id = 2;
+  Quality before = 3;
+  Quality after = 4;
+
+  enum Quality {
+    SD = 0;
+    HD = 1;
+    FULL_HD = 2;
+  }
+}
+
+message MovieWatched {
+  BaseEventInfo info = 1;
+  string movie_id = 2;
+}
+
+message FiltersApplied {
+  BaseEventInfo info = 1;
+  string query = 2;
+}
+
+message Event {
+  oneof event {
+    Click click = 1;
+    PageViewed page_viewed = 2;
+    MovieQualityChanged movie_quality_changed = 3;
+    MovieWatched movie_watched = 4;
+    FiltersApplied filters_applied = 5;
+  }
+}
+
+message EventStream {
+  repeated Event events = 1;
+}

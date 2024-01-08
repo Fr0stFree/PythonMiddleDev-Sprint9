@@ -1,4 +1,3 @@
-import asyncio
 from typing import Literal
 
 from settings import Settings
@@ -6,8 +5,6 @@ from src.consumers import KafkaBroker, RabbitBroker, RedisBroker, AbstractBroker
 from src.extractor import EventExtractor
 from src.loader import EventLoader
 from src.transformer import EventTransformer
-
-settings = Settings()
 
 
 def get_broker(broker: Literal['kafka', 'rabbitmq', 'redis']) -> AbstractBroker:
@@ -21,17 +18,14 @@ def get_broker(broker: Literal['kafka', 'rabbitmq', 'redis']) -> AbstractBroker:
         return RedisBroker(host=settings.redis_host, port=settings.redis_port, channel_name=settings.redis_channel)
 
 
-async def main():
+if __name__ == '__main__':
+    settings = Settings()
     extractor = EventExtractor(message_broker=get_broker(settings.selected_broker))
     transformer = EventTransformer()
-    loader = EventLoader()
+    loader = EventLoader(settings.clickhouse_host, settings.clickhouse_port)
 
-    for events in extractor.start():
-        print(f'Received event: {events}')
-        transformed_event = transformer.transform(events)
-        await loader.load(transformed_event)
-        print('Inserted.')
+    loader.init_database()
 
-
-if __name__ == '__main__':
-    asyncio.run(main())
+    for event_stream in extractor.start():
+        events = transformer.serialize_stream(event_stream)
+        loader.load_events(events)

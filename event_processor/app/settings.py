@@ -22,6 +22,9 @@ class Settings(BaseSettings):
     redis_port: int = Field(..., env='REDIS_PORT')
     redis_channel: str = Field(..., env='REDIS_CHANNEL')
 
+    clickhouse_host: str = Field(..., env='CLICKHOUSE_HOST')
+    clickhouse_port: int = Field(..., env='CLICKHOUSE_PORT')
+
     class Config:
         env_file = find_dotenv('.env')
         env_file_encoding = 'utf-8'

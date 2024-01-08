@@ -1,11 +1,12 @@
-version: "3.9"
+version: '3.9'
+name: 'cinema-ugc-dev'
 
 services:
   kafka-ui:
     image: provectuslabs/kafka-ui:v0.7.0
     container_name: kafka-ui
     ports:
-      - "8080:8080"
+      - '8080:8080'
     restart: unless-stopped
     depends_on:
       - kafka
@@ -15,7 +16,7 @@ services:
 
   kafka:
     image: 'bitnami/kafka:latest'
-    container_name: kafka
+    container_name: kafka-dev
     ports:
       - '9094:9094'
     restart: unless-stopped
@@ -30,7 +31,7 @@ services:
 
   rabbitmq:
     image: 'rabbitmq:3.11.18'
-    container_name: rabbitmq
+    container_name: rabbitmq-dev
     ports:
       - '5672:5672'
       - '15672:15672'
@@ -40,9 +41,18 @@ services:
       - RABBITMQ_DEFAULT_PASS=admin
       - RABBITMQ_DEFAULT_VHOST=/
 
+  clickhouse:
+    image: clickhouse/clickhouse-server:23
+    container_name: clickhouse-dev
+    ports:
+      - "8123:8123"
+      - "9000:9000"
+    volumes:
+      - ./clickhouse/dev/master:/etc/clickhouse-server
+
   redis:
     image: 'redis:6.2.5'
-    container_name: redis
+    container_name: redis-dev
     ports:
       - '6379:6379'
     restart: unless-stopped

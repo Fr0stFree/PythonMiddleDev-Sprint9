@@ -1,4 +1,3 @@
-import json
 from typing import Generator, Union
 
 from kafka import KafkaConsumer
@@ -14,7 +13,6 @@ class KafkaBroker(AbstractBroker):
             auto_offset_reset='earliest',
             enable_auto_commit=True,
             group_id='events-group',
-            value_deserializer=lambda x: json.loads(x.decode('utf-8'))
         )
 
     def receive(self) -> Generator[Union[str, bytes], None, None]:

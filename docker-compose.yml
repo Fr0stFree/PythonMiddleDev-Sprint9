@@ -1,0 +1,92 @@
+version: '3.9'
+name: 'cinema-ugc'
+
+services:
+  event-collector:
+    build: ./event_collector
+    container_name: event-collector
+    env_file:
+      - .env
+    ports:
+      - '8000:8000'
+    restart: unless-stopped
+    depends_on:
+      - rabbitmq
+
+  event-processor:
+    build: ./event_processor
+    container_name: event-processor
+    env_file:
+      - .env
+    restart: unless-stopped
+    depends_on:
+      - rabbitmq
+      - clickhouse-node1
+      - clickhouse-node2
+      - clickhouse-node3
+      - clickhouse-node4
+
+  rabbitmq:
+    image: 'rabbitmq:3.11.18'
+    container_name: rabbitmq
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+    restart: unless-stopped
+    environment:
+      - RABBITMQ_DEFAULT_USER
+      - RABBITMQ_DEFAULT_PASS
+      - RABBITMQ_DEFAULT_VHOST
+
+  zookeeper:
+    image: zookeeper:3.8
+    container_name: zookeeper
+    hostname: zookeeper
+
+  clickhouse-node1:
+    image: clickhouse/clickhouse-server:23
+    container_name: clickhouse-node1
+    hostname: clickhouse-node1
+    ports:
+      - "8123:8123"
+      - "9000:9000"
+    volumes:
+      - ./clickhouse/prod/node1:/etc/clickhouse-server
+    depends_on:
+      - zookeeper
+
+  clickhouse-node2:
+    image: clickhouse/clickhouse-server:23
+    container_name: clickhouse-node2
+    hostname: clickhouse-node2
+    ports:
+      - "8124:8123"
+      - "9001:9000"
+    volumes:
+      - ./clickhouse/prod/node2:/etc/clickhouse-server
+    depends_on:
+      - zookeeper
+
+  clickhouse-node3:
+    image: clickhouse/clickhouse-server:23
+    container_name: clickhouse-node3
+    hostname: clickhouse-node3
+    ports:
+      - "8125:8123"
+      - "9002:9000"
+    volumes:
+      - ./clickhouse/prod/node3:/etc/clickhouse-server
+    depends_on:
+      - zookeeper
+
+  clickhouse-node4:
+    image: clickhouse/clickhouse-server:23
+    container_name: clickhouse-node4
+    hostname: clickhouse-node4
+    ports:
+      - "8126:8123"
+      - "9003:9000"
+    volumes:
+      - ./clickhouse/prod/node4:/etc/clickhouse-server
+    depends_on:
+      - zookeeper

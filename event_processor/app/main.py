@@ -22,8 +22,10 @@ if __name__ == '__main__':
     settings = Settings()
     extractor = EventExtractor(message_broker=get_broker(settings.selected_broker))
     transformer = EventTransformer()
-    loader = EventLoader()
+    loader = EventLoader(settings.clickhouse_host, settings.clickhouse_port)
 
-    for events in extractor.start():
-        transformed_events = transformer.transform(events)
-        loader.load(transformed_events)
+    loader.init_database()
+
+    for event_stream in extractor.start():
+        events = transformer.serialize_stream(event_stream)
+        loader.load_events(events)

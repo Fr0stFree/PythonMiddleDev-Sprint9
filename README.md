@@ -1,5 +1,5 @@
 # UGC Service
-...
+Проект расположен по адресу https://github.com/Fr0stFree/CinemaUGC
 
 
 ## Системные требования к сервису

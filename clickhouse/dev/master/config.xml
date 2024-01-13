@@ -15,8 +15,6 @@
     <listen_host>0.0.0.0</listen_host>
     <http_port>8123</http_port>
     <tcp_port>9000</tcp_port>
-    <interserver_http_host>clickhouse-node1</interserver_http_host>
-    <interserver_http_port>9009</interserver_http_port>
 
     <max_connections>4096</max_connections>
     <keep_alive_timeout>3</keep_alive_timeout>
@@ -33,7 +31,6 @@
     <default_database>default</default_database>
     <timezone>Europe/Moscow</timezone>
     <mlock_executable>false</mlock_executable>
-
 
     <distributed_ddl>
         <path>/clickhouse/task_queue/ddl</path>

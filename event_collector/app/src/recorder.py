@@ -18,15 +18,13 @@ class EventRecorder:
         await self._queue.put(event)
 
     async def start(self) -> None:
-        if not self._broker.is_connected():
-            raise RuntimeError(f"Connection to broker is not established")
-
+        await self._broker.connect()
         asyncio.ensure_future(self._run())
 
     async def shutdown(self) -> None:
         await self._queue.join()
         self._flush_events()
-        self._broker.disconnect()
+        await self._broker.disconnect()
 
     async def _run(self) -> None:
         while True:
@@ -45,7 +43,7 @@ class EventRecorder:
             self._flush_events()
 
     def _flush_events(self) -> None:
-        stream = EventStream(events=[event.to_proto() for event in self._batch])
-        self._broker.send(stream.SerializeToString())
-        print(f"Successfully sent {len(self._batch)}(s) events to broker")
+        stream = EventStream(events=[event.to_proto() for event in self._batch]).SerializeToString()
+        asyncio.create_task(self._broker.send(stream))
+        print(f"Successfully sent {len(self._batch)} event(s) to broker")
         self._batch.clear()

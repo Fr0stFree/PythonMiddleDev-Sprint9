@@ -1,25 +1,21 @@
-import json
-
-from kafka import KafkaProducer
+from aiokafka import AIOKafkaProducer
 
 from .base import AbstractBroker
 
 
 class KafkaBroker(AbstractBroker):
     def __init__(self, broker_url: str, topic: str) -> None:
-        self._kafka: KafkaProducer = KafkaProducer(
-            bootstrap_servers=[broker_url],
-            value_serializer=lambda x: json.dumps(x).encode('utf-8'),
-            key_serializer=lambda x: str(x).encode('utf-8')
-        )
+        self._kafka: AIOKafkaProducer = None
+        self._broker_url = broker_url
         self._kafka_topic = topic
+
+    async def connect(self) -> None:
+        self._kafka = AIOKafkaProducer(bootstrap_servers=self._broker_url)
+        await self._kafka.start()
         print(f"Connected to kafka. Ready to send messages to topic '{self._kafka_topic}'")
 
-    def send(self, messages: list[dict]) -> None:
-        self._kafka.send(self._kafka_topic, value=messages)
+    async def send(self, message: bytes) -> None:
+        await self._kafka.send_and_wait(topic=self._kafka_topic, value=message)
 
-    def is_connected(self) -> bool:
-        return self._kafka.bootstrap_connected()
-
-    def disconnect(self) -> None:
-        self._kafka.close()
+    async def disconnect(self) -> None:
+        await self._kafka.stop()

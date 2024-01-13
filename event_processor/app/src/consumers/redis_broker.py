@@ -18,3 +18,6 @@ class RedisBroker(AbstractBroker):
         for message in pubsub.listen():
             if message['type'] == 'message':
                 yield message['data']
+
+    def ack(self) -> None:
+        pass

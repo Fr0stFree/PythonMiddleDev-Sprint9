@@ -29,3 +29,4 @@ if __name__ == '__main__':
     for event_stream in extractor.start():
         events = transformer.serialize_stream(event_stream)
         loader.load_events(events)
+        extractor.ack()

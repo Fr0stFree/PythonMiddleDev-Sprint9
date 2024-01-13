@@ -113,7 +113,7 @@ class EventSchema(BaseModel):
                 )
 
             case EventType.MOVIE_WATCHED:
-                return Event(movie_watched=MovieWatched(info=info, movie_id=self.movie_id, duration=self.duration))
+                return Event(movie_watched=MovieWatched(info=info, movie_id=self.movie_id))
 
             case EventType.FILTERS_APPLIED:
                 return Event(filters_applied=FiltersApplied(info=info, query=self.filters_query))

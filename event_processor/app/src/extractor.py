@@ -9,3 +9,6 @@ class EventExtractor:
 
     def start(self) -> Generator[Any, None, None]:
         yield from self._broker.receive()
+
+    def ack(self) -> None:
+        self._broker.ack()

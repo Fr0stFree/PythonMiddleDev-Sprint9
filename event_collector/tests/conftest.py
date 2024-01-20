@@ -7,7 +7,7 @@ from aiohttp.test_utils import TestClient
 from aiohttp.web import Application
 from faker import Faker
 
-from src.handlers import CreateEventHandler
+from src.olap_events.handlers import CreateEventHandler
 
 
 @pytest.fixture(scope="function")

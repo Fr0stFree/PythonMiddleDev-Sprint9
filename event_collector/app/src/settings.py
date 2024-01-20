@@ -24,6 +24,12 @@ class Settings(BaseSettings):
     redis_port: int = Field(..., env='REDIS_PORT')
     redis_channel: str = Field(..., env='REDIS_CHANNEL')
 
+    mongo_username: str = Field(..., env='MONGO_USERNAME')
+    mongo_password: str = Field(..., env='MONGO_PASSWORD')
+    mongo_host: str = Field(..., env='MONGO_HOST')
+    mongo_port: int = Field(..., env='MONGO_PORT')
+    mongo_db_name: str = Field(..., env='MONGO_DB_NAME')
+
     class Config:
         env_file = find_dotenv('.env')
         env_file_encoding = 'utf-8'

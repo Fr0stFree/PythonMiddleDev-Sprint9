@@ -1,6 +1,6 @@
 from typing import Literal
 
-from settings import Settings
+from src.settings import Settings
 from src.consumers import KafkaBroker, RabbitBroker, RedisBroker, AbstractBroker
 from src.extractor import EventExtractor
 from src.loader import EventLoader

@@ -18,12 +18,12 @@ class CreateEventHandler:
             event = EventSchema.model_validate_json(data)
         except Exception as error:
             raise HTTPBadRequest(
-                body=json.dumps({'status': 'error', 'detail': str(error)}),
-                content_type='application/json',
+                body=json.dumps({"status": "error", "detail": str(error)}),
+                content_type="application/json",
             )
         await self._event_callback(event)
         return Response(
-            text=json.dumps({'status': 'ok'}),
-            content_type='application/json',
+            text=json.dumps({"status": "ok"}),
+            content_type="application/json",
             status=HTTPStatus.ACCEPTED,
         )

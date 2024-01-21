@@ -6,9 +6,9 @@ from motor import motor_asyncio as ma
 
 
 class MongoCollections(StrEnum):
-    LIKES = 'likes'
-    REVIEWS = 'reviews'
-    BOOKMARKS = 'bookmarks'
+    LIKES = "likes"
+    REVIEWS = "reviews"
+    BOOKMARKS = "bookmarks"
 
 
 async def connect_to_mongo(username: str, password: str, host: str, port: int, db_name: str) -> ma.AsyncIOMotorDatabase:

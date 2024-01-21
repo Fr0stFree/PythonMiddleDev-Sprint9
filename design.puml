@@ -34,10 +34,12 @@ component UGCService {
     component EventCollector
     queue Kafka
     component EventProcessor
+    database MongoDB #lightblue
 
     Events -> EventCollector
     EventCollector -> Kafka
-    Kafka -> EventProcessor
+    EventCollector -up-> MongoDB: OLDP events
+    Kafka -> EventProcessor: OLAP Events
     EventProcessor -> Clickhouse
 }
 

@@ -66,5 +66,3 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=admin
-    volumes:
-      - ./mongo/dev/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro

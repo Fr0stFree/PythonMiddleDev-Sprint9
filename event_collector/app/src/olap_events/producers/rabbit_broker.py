@@ -34,8 +34,10 @@ class RabbitBroker(AbstractBroker):
             durable=True,
         )
         await self._queue.bind(self._exchange)
-        print(f"Connected to rabbit."
-              f"Ready to send messages to queue '{self._queue_name}' through exchange '{self._exchange_name}'")
+        print(
+            f"Connected to rabbit."
+            f"Ready to send messages to queue '{self._queue_name}' through exchange '{self._exchange_name}'"
+        )
 
     async def send(self, message: bytes) -> None:
         message = aio_pika.Message(body=message, delivery_mode=aio_pika.DeliveryMode.PERSISTENT)

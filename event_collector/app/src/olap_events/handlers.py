@@ -5,7 +5,7 @@ from typing import Callable
 from aiohttp.web import Request, Response
 from aiohttp.web_exceptions import HTTPBadRequest
 
-from src.schemas import EventSchema
+from src.olap_events.schemas import EventSchema
 
 
 class CreateEventHandler:
@@ -18,12 +18,12 @@ class CreateEventHandler:
             event = EventSchema.model_validate_json(data)
         except Exception as error:
             raise HTTPBadRequest(
-                body=json.dumps({'status': 'error', 'detail': str(error)}),
-                content_type='application/json',
+                body=json.dumps({"status": "error", "detail": str(error)}),
+                content_type="application/json",
             )
         await self._event_callback(event)
         return Response(
-            text=json.dumps({'status': 'ok'}),
-            content_type='application/json',
+            text=json.dumps({"status": "ok"}),
+            content_type="application/json",
             status=HTTPStatus.ACCEPTED,
         )

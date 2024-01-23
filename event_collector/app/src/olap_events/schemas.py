@@ -4,16 +4,23 @@ from uuid import UUID
 
 from pydantic import BaseModel, PositiveInt, PositiveFloat, field_validator, model_validator
 
-from protocol.events_pb2 import MovieWatched, MovieQualityChanged, PageViewed, FiltersApplied, Click, BaseEventInfo, \
-    Event
+from protocol.events_pb2 import (
+    MovieWatched,
+    MovieQualityChanged,
+    PageViewed,
+    FiltersApplied,
+    Click,
+    BaseEventInfo,
+    Event,
+)
 
 
 class EventType(Enum):
-    CLICK = 'click'
-    PAGE_VIEWED = 'page_viewed'
-    MOVIE_QUALITY_CHANGED = 'movie_quality_changed'
-    MOVIE_WATCHED = 'movie_watched'
-    FILTERS_APPLIED = 'filters_applied'
+    CLICK = "click"
+    PAGE_VIEWED = "page_viewed"
+    MOVIE_QUALITY_CHANGED = "movie_quality_changed"
+    MOVIE_WATCHED = "movie_watched"
+    FILTERS_APPLIED = "filters_applied"
 
 
 class EventSchema(BaseModel):

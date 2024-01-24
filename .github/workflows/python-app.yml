@@ -37,7 +37,7 @@ jobs:
         pip install wemake-python-styleguide pytest mypy flake8-html lxml
         if [ -f event_processor/requirements.txt ]; then pip install -r event_processor/requirements.txt; fi
         if [ -f event_collector/requirements.txt ]; then pip install -r event_collector/requirements.txt; fi
-        if [ -f event_collector/requirements-test.txt ]; then pip install -r event_collector/requirements-test.txt; fi
+        if [ -f event_collector/requirements.test.txt ]; then pip install -r event_collector/requirements.test.txt; fi
 
     - name: Lint with wemake-python-styleguide
       run: |

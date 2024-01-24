@@ -3,7 +3,7 @@ from http import HTTPStatus
 
 import pytest
 
-from src.schemas import EventType
+from event_collector.app.src.olap_events.schemas import EventType
 
 
 @pytest.mark.asyncio

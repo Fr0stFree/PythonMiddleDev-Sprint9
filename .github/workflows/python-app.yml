@@ -16,7 +16,7 @@ jobs:
     continue-on-error: true
     strategy:
       matrix:
-        python-version: [3.9, 3.10, 3.11]
+        python-version: ['3.9', '3.10', '3.11']
 
     steps:
     - uses: actions/checkout@v3
@@ -45,7 +45,7 @@ jobs:
 
     - name: Mypy checking
       run: |
-        mypy --html-report reports/mypy/
+        mypy . --html-report reports/mypy/
 
     - name: Test with pytest
       run: |

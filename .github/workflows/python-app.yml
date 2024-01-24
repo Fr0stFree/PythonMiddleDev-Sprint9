@@ -47,6 +47,10 @@ jobs:
       run: |
         mypy . --html-report reports/mypy/ || true
 
+    - name: Test with pytest
+      run: |
+        python -m pytest
+
     - name: Upload reports
       uses: actions/upload-artifact@v2
       with:

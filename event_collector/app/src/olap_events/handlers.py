@@ -5,7 +5,7 @@ from typing import Callable
 from aiohttp.web import Request, Response
 from aiohttp.web_exceptions import HTTPBadRequest
 
-from event_collector.app.src.olap_events.schemas import EventSchema
+from src.olap_events.schemas import EventSchema
 
 
 class CreateEventHandler:

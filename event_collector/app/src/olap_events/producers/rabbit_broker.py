@@ -1,6 +1,11 @@
+import logging
+
 import aio_pika
 
 from .base import AbstractBroker
+
+
+logger = logging.getLogger(__name__)
 
 
 class RabbitBroker(AbstractBroker):
@@ -34,8 +39,8 @@ class RabbitBroker(AbstractBroker):
             durable=True,
         )
         await self._queue.bind(self._exchange)
-        print(
-            f"Connected to rabbit."
+        logger.info(
+            "Connected to rabbit."
             f"Ready to send messages to queue '{self._queue_name}' through exchange '{self._exchange_name}'"
         )
 

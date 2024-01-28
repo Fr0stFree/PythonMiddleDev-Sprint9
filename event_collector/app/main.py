@@ -3,6 +3,7 @@ from typing import Literal
 from aiohttp import web
 
 from src.settings import Settings
+from src.logging_settings import setup_logger
 from src.middleware import error_handler
 from src.olap_events.handlers import CreateEventHandler
 from src.olap_events.producers import KafkaBroker, RabbitBroker, RedisBroker, AbstractBroker
@@ -40,8 +41,9 @@ def get_broker(broker: Literal['kafka', 'rabbitmq', 'redis']) -> AbstractBroker:
 if __name__ == '__main__':
     settings = Settings()
     app = web.Application(middlewares=[error_handler])
+    setup_logger(app, settings.logstash_host, settings.logstash_port)
     recorder = EventRecorder(message_broker=get_broker(settings.selected_broker))
-
+    app.logger.info(f"Selected broker: {settings.selected_broker}")
     app.add_routes([web.post('/event', CreateEventHandler(callback=recorder.on_event))])
     app.add_routes(oltp_router)
     app.on_startup.append(startup)

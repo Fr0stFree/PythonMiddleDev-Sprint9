@@ -16,3 +16,9 @@ async def error_handler(request: Request, handler: Callable) -> Response:
             body=json.dumps({"status": "error", "detail": {error["loc"][0]: error["msg"] for error in error.errors()}}),
             content_type="application/json",
         )
+
+
+@middleware
+async def request_id_middleware(request: Request, handler: Callable) -> Response:
+    request_id = request.headers.get('X-Request-ID', 'no-request-id')
+    return await handler(request)

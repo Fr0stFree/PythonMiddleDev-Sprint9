@@ -30,6 +30,9 @@ class Settings(BaseSettings):
     mongo_port: int = Field(..., env="MONGO_PORT")
     mongo_db_name: str = Field(..., env="MONGO_DB_NAME")
 
+    logstash_host: str | None = Field(default=None, env="LOGSTASH_HOST")
+    logstash_port: int | None = Field(default=None, env="LOGSTASH_PORT")
+
     class Config:
         env_file = find_dotenv(".env")
         env_file_encoding = "utf-8"

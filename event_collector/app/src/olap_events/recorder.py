@@ -1,8 +1,12 @@
 import asyncio
+import logging
 
 from protocol.events_pb2 import EventStream
 from src.olap_events.producers import AbstractBroker
 from src.olap_events.schemas import EventSchema
+
+
+logger = logging.getLogger(__name__)
 
 
 class EventRecorder:
@@ -45,5 +49,5 @@ class EventRecorder:
     def _flush_events(self) -> None:
         stream = EventStream(events=[event.to_proto() for event in self._batch]).SerializeToString()
         asyncio.create_task(self._broker.send(stream))
-        print(f"Successfully sent {len(self._batch)} event(s) to broker")
+        logger.info(f"Successfully sent {len(self._batch)} event(s) to broker")
         self._batch.clear()

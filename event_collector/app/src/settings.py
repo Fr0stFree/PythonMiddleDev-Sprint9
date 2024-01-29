@@ -33,6 +33,47 @@ class Settings(BaseSettings):
     logstash_host: str | None = Field(default=None, env="LOGSTASH_HOST")
     logstash_port: int | None = Field(default=None, env="LOGSTASH_PORT")
 
+    @property
+    def logger_config(self) -> dict:
+        return {
+            "version": 1,
+            "disable_existing_loggers": False,
+            "handlers": {
+                "console": {
+                    "class": "logging.StreamHandler",
+                    "level": "INFO",
+                    "formatter": "default",
+                    "filters": ["requestid"],
+                },
+                "logstash": {
+                    "class": "logstash.LogstashHandler",
+                    "host": self.logstash_host,
+                    "port": self.logstash_port,
+                    "version": 1,
+                    "filters": ["requestid"],
+                },
+            },
+            "filters": {
+                "requestid": {"()": "belvaio_request_id.logger.RequestIdFilter"}
+            },
+            "formatters": {
+                "default": {
+                    "format": "%(asctime)s [%(request_id)s] %(levelname)s %(name)s | %(message)s",
+                },
+            },
+            "loggers": {
+                "": {
+                    "level": "DEBUG",
+                    "handlers": ["console", "logstash"],
+                    "propagate": True
+                }
+            },
+        }
+
+    @property
+    def access_log_format(self) -> str:
+        return '%a "%r" %s %b "%{User-Agent}i"'
+
     class Config:
         env_file = find_dotenv(".env")
         env_file_encoding = "utf-8"

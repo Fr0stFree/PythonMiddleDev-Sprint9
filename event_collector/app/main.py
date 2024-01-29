@@ -1,15 +1,17 @@
+import logging.config
 from typing import Literal
 
 from aiohttp import web
+from belvaio_request_id.logger import RequestIdAccessLogger
+from belvaio_request_id.middleware import request_id_middleware
 
-from src.settings import Settings
-from src.logging_settings import setup_logger
 from src.middleware import error_handler
 from src.olap_events.handlers import CreateEventHandler
 from src.olap_events.producers import KafkaBroker, RabbitBroker, RedisBroker, AbstractBroker
 from src.olap_events.recorder import EventRecorder
-from src.oltp_events.handlers import router as oltp_router
 from src.oltp_events.db import connect_to_mongo, create_collections, MongoCollections
+from src.oltp_events.handlers import router as oltp_router
+from src.settings import Settings
 
 
 async def startup(app: web.Application) -> None:
@@ -40,12 +42,13 @@ def get_broker(broker: Literal['kafka', 'rabbitmq', 'redis']) -> AbstractBroker:
 
 if __name__ == '__main__':
     settings = Settings()
-    app = web.Application(middlewares=[error_handler])
-    setup_logger(app, settings.logstash_host, settings.logstash_port)
+    logging.config.dictConfig(settings.logger_config)
     recorder = EventRecorder(message_broker=get_broker(settings.selected_broker))
-    app.logger.info(f"Selected broker: {settings.selected_broker}")
+
+    app = web.Application(middlewares=[error_handler, request_id_middleware])
     app.add_routes([web.post('/event', CreateEventHandler(callback=recorder.on_event))])
     app.add_routes(oltp_router)
     app.on_startup.append(startup)
     app.on_shutdown.append(shutdown)
-    web.run_app(app, port=settings.app_port, host=settings.app_host)
+    web.run_app(app, port=settings.app_port, host=settings.app_host, access_log_format=settings.access_log_format,
+                access_log_class=RequestIdAccessLogger)

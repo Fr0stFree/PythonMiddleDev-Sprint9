@@ -1,8 +1,11 @@
 import asyncio
+import logging
 from enum import StrEnum
 from typing import Sequence
 
 from motor import motor_asyncio as ma
+
+logger = logging.getLogger(__name__)
 
 
 class MongoCollections(StrEnum):
@@ -20,8 +23,8 @@ async def connect_to_mongo(username: str, password: str, host: str, port: int, d
 async def create_collections(db: ma.AsyncIOMotorDatabase, collections: Sequence[str]) -> None:
     collections_to_create = set(collections) - set(await db.list_collection_names())
     if not collections_to_create:
-        print(f'Collections {", ".join(collections)} already exist')
+        logger.info(f'Collections {", ".join(collections)} already exist')
         return
 
     await asyncio.gather(*[db.create_collection(collection) for collection in collections_to_create])
-    print(f'Collections {", ".join(collections_to_create)} created successfully')
+    logger.info(f'Collections {", ".join(collections_to_create)} created successfully')

@@ -4,6 +4,7 @@ from typing import Literal
 from aiohttp import web
 from belvaio_request_id.logger import RequestIdAccessLogger
 from belvaio_request_id.middleware import request_id_middleware
+import sentry_sdk
 
 from src.middleware import error_handler
 from src.olap_events.handlers import CreateEventHandler
@@ -23,6 +24,17 @@ async def startup(app: web.Application) -> None:
         client, collections=[MongoCollections.LIKES, MongoCollections.REVIEWS, MongoCollections.BOOKMARKS]
     )
     app['db'] = client[settings.mongo_db_name]
+
+    sentry_sdk.init(
+        dsn="https://bb85f781da58e057eaf3e9af127a5b9d@o4506672312942592.ingest.sentry.io/4506672314712064",
+        # Set traces_sample_rate to 1.0 to capture 100%
+        # of transactions for performance monitoring.
+        traces_sample_rate=1.0,
+        # Set profiles_sample_rate to 1.0 to profile 100%
+        # of sampled transactions.
+        # We recommend adjusting this value in production.
+        profiles_sample_rate=1.0,
+    )
 
 
 async def shutdown(app: web.Application) -> None:

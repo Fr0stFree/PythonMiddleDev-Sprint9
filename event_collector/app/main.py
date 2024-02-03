@@ -6,7 +6,7 @@ from belvaio_request_id.logger import RequestIdAccessLogger
 from belvaio_request_id.middleware import request_id_middleware
 import sentry_sdk
 
-from src.middleware import error_handler
+from src.middleware import error_handler, get_auth_middleware
 from src.olap_events.handlers import CreateEventHandler
 from src.olap_events.producers import KafkaBroker, RabbitBroker, RedisBroker, AbstractBroker
 from src.olap_events.recorder import EventRecorder
@@ -57,7 +57,8 @@ if __name__ == '__main__':
     logging.config.dictConfig(settings.logger_config)
     recorder = EventRecorder(message_broker=get_broker(settings.selected_broker))
 
-    app = web.Application(middlewares=[error_handler, request_id_middleware])
+    auth_middleware = get_auth_middleware(settings.jwt_scheme, settings.jwt_decode_key, settings.jwt_decode_algorithm)
+    app = web.Application(middlewares=[request_id_middleware, error_handler, auth_middleware])
     app.add_routes([web.post('/event', CreateEventHandler(callback=recorder.on_event))])
     app.add_routes(oltp_router)
     app.on_startup.append(startup)

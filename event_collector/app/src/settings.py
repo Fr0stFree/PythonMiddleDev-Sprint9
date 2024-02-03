@@ -10,6 +10,10 @@ class Settings(BaseSettings):
     app_host: str = Field("localhost", env="EVENT_COLLECTOR_HOST")
     selected_broker: Literal["kafka", "rabbitmq", "redis"] = Field(..., env="SELECTED_BROKER")
 
+    jwt_scheme: str = Field(default="Bearer", env="JWT_SCHEME")
+    jwt_decode_key: str = Field(..., env="JWT_DECODE_KEY")
+    jwt_decode_algorithm: str = Field(default="HS256", env="JWT_DECODE_ALGORITHM")
+
     kafka_url: str = Field(..., env="KAFKA_URL")
     kafka_topic: str = Field(..., env="KAFKA_TOPIC")
 

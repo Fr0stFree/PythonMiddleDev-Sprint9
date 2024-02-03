@@ -9,3 +9,5 @@ motor==3.3.2
 python-logstash==0.4.8
 belvaio-request-id==0.1.2
 sentry-sdk[fastapi]==1.40.0
+python-jose==3.3.0
+sentry_sdk==1.40.0
